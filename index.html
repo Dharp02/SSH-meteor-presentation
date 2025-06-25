@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSH Terminal - Web-Based Container Terminal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: slideInDown 1s ease-out;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: slideInUp 1s ease-out 0.3s both;
+        }
+
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .tech-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            transform: translateY(-2px);
+            background: rgba(255,255,255,0.3);
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section h2 {
+            color: #4a5568;
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .feature-card h3 {
+            color: #2d3748;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .architecture-diagram {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .diagram-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .diagram-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 150px;
+            position: relative;
+        }
+
+        .diagram-item h4 {
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .diagram-item p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .arrow {
+            font-size: 2rem;
+            color: #667eea;
+            margin: 0 10px;
+        }
+
+        .code-snippet {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-snippet::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: #2d3748;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .code-snippet::after {
+            content: '● ● ●';
+            position: absolute;
+            top: 8px;
+            left: 15px;
+            color: #ff6b6b;
+            font-size: 12px;
+        }
+
+        .highlight {
+            color: #ffd93d;
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            transform: perspective(1000px) rotateY(0deg);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: perspective(1000px) rotateY(5deg);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .cta-section {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 50px;
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .cta-section h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .cta-section h2::after {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            background: #f7fafc;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section {
+                padding: 25px;
+            }
+            
+            .diagram-flow {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>🚀 SSH Terminal</h1>
+            <p class="subtitle">Modern Web-Based Container Terminal with AI Assistant</p>
+            <div class="tech-stack">
+                <span class="tech-badge">⚡ Meteor.js</span>
+                <span class="tech-badge">🐳 Docker</span>
+                <span class="tech-badge">💻 XTerm.js</span>
+                <span class="tech-badge">🔌 Socket.IO</span>
+                <span class="tech-badge">🤖 Claude AI</span>
+            </div>
+        </div>
+
+        <!-- Overview Section -->
+        <div class="section">
+            <h2>📋 Project Overview</h2>
+            <p style="font-size: 1.1rem; color: #4a5568; line-height: 1.8;">
+                A comprehensive web-based SSH terminal application that enables secure access to containerized environments directly through your browser. Built with modern technologies, it combines the power of Docker containerization with real-time terminal interaction and AI-powered assistance.
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">3,000+</div>
+                    <div class="stat-label">Lines of Code</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Components</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Core Technologies</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Web-Based</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="section">
+            <h2>✨ Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Web-Based SSH Terminal</h3>
+                    <p>Access SSH sessions directly from your browser with full terminal functionality powered by XTerm.js</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🐳</div>
+                    <h3>Dynamic Container Management</h3>
+                    <p>Create, manage, and connect to Docker containers on-demand with automatic port mapping</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Multi-Tab Interface</h3>
+                    <p>Open multiple terminal sessions simultaneously with tabbed interface and session management</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>AI Assistant</h3>
+                    <p>Integrated Claude AI chatbot for SSH commands, troubleshooting, and Linux administration help</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>Secure Authentication</h3>
+                    <p>Support for both password and SSH key authentication with connection history</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-Time Monitoring</h3>
+                    <p>Live container status tracking, session logging, and resource monitoring</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Section -->
+        <div class="section">
+            <h2>🏗️ System Architecture</h2>
+            <div class="architecture-diagram">
+                <div class="diagram-flow">
+                    <div class="diagram-item">
+                        <h4>React Frontend</h4>
+                        <p>XTerm.js Terminal<br/>Multi-tab Interface</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="diagram-item">
+                        <h4>Meteor Server</h4>
+                        <p>Socket.IO<br/>SSH Management</p>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="diagram-item">
+                        <h4>Docker Engine</h4>
+                        <p>Container Creation<br/>SSH Containers</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="code-snippet">
+<span class="highlight">// Real-time terminal communication</span>
+socket.on('startSession', async (credentials) => {
+  const conn = new Client();
+  conn.connect({
+    host: credentials.host,
+    port: credentials.port,
+    username: credentials.username,
+    password: credentials.password
+  });
+  
+  conn.shell((err, stream) => {
+    stream.on('data', (data) => {
+      socket.emit('output', data.toString());
+    });
+  });
+});
+            </div>
+        </div>
+
+        <!-- Technical Implementation -->
+        <div class="section">
+            <h2>⚙️ Technical Implementation</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Frontend Stack</h3>
+                    <p><strong>Meteor.js + React:</strong> Modern reactive framework with hot code reloading<br/>
+                    <strong>XTerm.js:</strong> Full-featured terminal emulator in the browser<br/>
+                    <strong>Socket.IO Client:</strong> Real-time bidirectional communication</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Backend Services</h3>
+                    <p><strong>Node.js + Meteor:</strong> Server-side JavaScript runtime<br/>
+                    <strong>SSH2 Library:</strong> Native SSH client implementation<br/>
+                    <strong>Dockerode:</strong> Docker Engine API integration</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🗄️</div>
+                    <h3>Data & Storage</h3>
+                    <p><strong>MongoDB:</strong> Session logs and user data persistence<br/>
+                    <strong>LocalStorage:</strong> Client-side preferences and history<br/>
+                    <strong>Docker Volumes:</strong> Container data management</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>AI Integration</h3>
+                    <p><strong>Anthropic Claude:</strong> Advanced AI assistant for command help<br/>
+                    <strong>REST API:</strong> Streaming and non-streaming chat endpoints<br/>
+                    <strong>Context Awareness:</strong> SSH and container-specific assistance</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Structure -->
+        <div class="section">
+            <h2>📁 Project Structure</h2>
+            <div class="code-snippet">
+<span class="highlight">meteor-ssh-terminal/</span>
+├── client/                 # Frontend React components
+│   ├── TerminalComponent.jsx
+│   ├── main.jsx
+│   └── terminal.css
+├── imports/
+│   ├── api/               # MongoDB collections & methods
+│   │   ├── sessions.js
+│   │   ├── auditLogs.js
+│   │   └── resourceLogs.js
+│   └── ui/components/     # Reusable React components
+│       ├── TerminalInstance.jsx
+│       ├── ActiveContainersPanel.jsx
+│       └── EnhancedChatbox.jsx
+├── server/                # Backend services
+│   ├── main.js           # Socket.IO & SSH management
+│   ├── aichat.js         # Claude AI integration
+│   └── containerPoolManager.js
+├── docker/
+│   └── Dockerfile        # SSH container definition
+└── package.json          # Dependencies & scripts
+            </div>
+        </div>
+
+        <!-- Usage & Demo -->
+        <div class="section">
+            <h2>🎯 How It Works</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">1️⃣</div>
+                    <h3>Create Container</h3>
+                    <p>Click "Create" to spin up a new SSH-enabled Docker container with automatic port mapping</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">2️⃣</div>
+                    <h3>Connect via SSH</h3>
+                    <p>Use auto-populated connection details or enter custom SSH credentials (supports key auth)</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">3️⃣</div>
+                    <h3>Terminal Access</h3>
+                    <p>Full terminal functionality with command history, copy/paste, and session persistence</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">4️⃣</div>
+                    <h3>AI Assistance</h3>
+                    <p>Get help with commands, troubleshooting, and Linux administration from the integrated AI</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How to Get Started Section -->
+        <div class="section">
+            <h2>🚀 How to Get Started</h2>
+            
+            <h3 style="color: #667eea; margin-bottom: 20px;">📋 Prerequisites</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Node.js & Meteor</h3>
+                    <p>Install Node.js and Meteor globally on your system</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🐳</div>
+                    <h3>Docker</h3>
+                    <p>Install Docker Desktop for container management</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔑</div>
+                    <h3>API Key</h3>
+                    <p>Get your Anthropic API key for AI features</p>
+                </div>
+            </div>
+
+            <h3 style="color: #667eea; margin: 30px 0 20px 0;">⚡ Quick Installation</h3>
+            <div class="code-snippet">
+<span class="highlight"># 1. Install Meteor globally</span>
+npm install -g meteor
+
+<span class="highlight"># 2. Clone the repository</span>
+git clone https://github.com/Dharp02/meteor-ssh-terminal.git
+cd meteor-ssh-terminal
+
+<span class="highlight"># 3. Install dependencies</span>
+meteor npm install
+
+<span class="highlight"># 4. Setup environment variables</span>
+echo "ANTHROPIC_API_KEY=your_anthropic_api_key" > .env
+
+<span class="highlight"># 5. Build SSH container image</span>
+cd docker
+docker build -t ssh-terminal .
+cd ..
+
+<span class="highlight"># 6. Run the application</span>
+meteor run
+
+<span class="highlight"># 7. Access the application</span>
+# Open http://localhost:3000 in your browser
+            </div>
+
+            <h3 style="color: #667eea; margin: 30px 0 20px 0;">🎯 Usage Steps</h3>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">1️⃣</div>
+                    <h3>Create Container</h3>
+                    <p>Click "Create" button to spin up a new SSH container with automatic port mapping</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">2️⃣</div>
+                    <h3>Connect</h3>
+                    <p>Fill in connection details (auto-populated for new containers): root / password123</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">3️⃣</div>
+                    <h3>Terminal Access</h3>
+                    <p>Use the terminal just like a native SSH session with full functionality</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">4️⃣</div>
+                    <h3>AI Help</h3>
+                    <p>Click the chat button for command assistance and troubleshooting</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">5️⃣</div>
+                    <h3>Multi-sessions</h3>
+                    <p>Open multiple tabs for concurrent sessions and container management</p>
+                </div>
+            </div>
+
+            <h3 style="color: #667eea; margin: 30px 0 20px 0;">🔧 Configuration</h3>
+            <div class="code-snippet">
+<span class="highlight"># Key environment variables:</span>
+ANTHROPIC_API_KEY=your_anthropic_api_key  # Required for AI features
+DOCKER_HOST=localhost                     # Docker daemon host  
+MONGO_URL=mongodb://localhost:27017/app   # Database connection
+
+<span class="highlight"># Default container credentials:</span>
+Username: root
+Password: password123
+SSH Port: Auto-assigned (check Active Containers panel)
+            </div>
+        </div>
+
+        <!-- Installation & Setup -->
+        <div class="section" id="quick-start">
+            <h2>🚀 Quick Start</h2>
+            <div class="code-snippet">
+<span class="highlight"># Clone the repository</span>
+git clone &lt;repository-url&gt;
+cd meteor-ssh-terminal
+
+<span class="highlight"># Install dependencies</span>
+meteor npm install
+
+<span class="highlight"># Set up environment</span>
+echo "ANTHROPIC_API_KEY=your_api_key" > .env
+
+<span class="highlight"># Build SSH container image</span>
+cd docker
+docker build -t ssh-terminal .
+
+<span class="highlight"># Run the application</span>
+meteor run
+
+<span class="highlight"># Access at http://localhost:3000</span>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <h2>🌟 Ready to Explore?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9;">
+                Experience the future of web-based terminal access with containerized environments and AI assistance
+            </p>
+            <a href="https://github.com/Dharp02/meteor-ssh-terminal" class="btn" target="_blank">🔗 View on GitHub</a>
+            <a href="#https://github.com/Dharp02/meteor-ssh-terminal/blob/main/README.md" class="btn" target="_blank">📖 Documentation</a>
+            <a href="#" class="btn">🎮 Live Demo</a>
+        </div>
+    </div>
+</body>
+</html>
